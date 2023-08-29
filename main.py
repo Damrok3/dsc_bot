@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+from apikeys import *
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -13,11 +14,11 @@ async def on_ready():   # when bot is ready to start receiving commands it execu
 
 @client.command()
 async def hello(ctx):
-    await ctx.send("Hello, I am damrok's bot, and you can change the code while i run")
+    await ctx.send("Hello, I am damrok's bot")
 
 @client.command()
 async def tell_joke(ctx):
     await ctx.send("joke")
 
-client.run("aslkhsalkfsdfhsalfh")
+client.run(BOTTOKEN)
 
