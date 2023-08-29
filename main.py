@@ -1,0 +1,23 @@
+import discord
+from discord.ext import commands
+
+intents = discord.Intents.default()
+intents.message_content = True
+client = commands.Bot(command_prefix='!', intents=intents) # initializing instance of a bot and letting it know that its
+                                            # commands start with "!"
+
+@client.event
+async def on_ready():   # when bot is ready to start receiving commands it executes this function
+    print("Initialization complete")
+    print("-----------------------")
+
+@client.command()
+async def hello(ctx):
+    await ctx.send("Hello, I am damrok's bot, and you can change the code while i run")
+
+@client.command()
+async def tell_joke(ctx):
+    await ctx.send("joke")
+
+client.run("MTE0NTg3NDYyODEzNzQ1MTU2MQ.GfGwPX.WZgUZ_WJdXTK2F3w2Hy2kpx7E_x9xLheYz7z74")
+
