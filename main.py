@@ -19,5 +19,5 @@ async def hello(ctx):
 async def tell_joke(ctx):
     await ctx.send("joke")
 
-client.run("aslkhsalkfhsalfh")
+client.run("aslkhsalkfsdfhsalfh")
 
