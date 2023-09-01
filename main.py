@@ -1,5 +1,8 @@
+# https://youtu.be/M_6_GbDc39Q?si=ihgI3TTnVG529EZV
+
 import discord
 from discord.ext import commands
+from discord import FFmpegPCMAudio
 from apikeys import *
 from jokeapi import Jokes
 
@@ -39,7 +42,9 @@ async def joke(ctx):
 async def join(ctx):
     if(ctx.author.voice):                           # if user is in a voice channel, it will get this chanel id     
         channel = ctx.message.author.voice.channel  # and join it
-        await channel.connect()
+        voice = await channel.connect()
+        source = FFmpegPCMAudio("maestro.mp3")
+        player = voice.play(source)
     else:
         await ctx.send("You need to be in a voice channel to run this command!")
      
