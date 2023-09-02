@@ -4,7 +4,7 @@ import discord
 from discord.ext import commands
 from discord import FFmpegPCMAudio
 from discord.utils import get
-from youtube_dl import YoutubeDL
+from yt_dlp import YoutubeDL
 from apikeys import *
 from jokeapi import Jokes
 
@@ -12,10 +12,10 @@ intents = discord.Intents.default()
 intents.message_content = True
 intents.members = True
 client = commands.Bot(command_prefix='!', intents=intents)  # initializing instance of a bot and letting it know that its
-                                                            # commands start with "!"                                       
+                                                            # commands start with "!"                                                                                          
 
 @client.event
-async def on_ready():   # when bot is ready to start receiving commands it executes this function
+async def on_ready():   # when bot is ready to start receiving commands it executes this function    
     print("Initialization complete")
     print("-----------------------")
 
@@ -65,11 +65,12 @@ async def play(ctx, url):
                 if not voice.is_playing():
                     try:
                         with YoutubeDL(YDL_OPTIONS) as ydl:
+                            #info = ydl.extract_info("ytsearch:%s" % url, download=False)
                             info = ydl.extract_info(url, download=False)
                             URL = info['url']
                             voice.play(FFmpegPCMAudio(URL, **FFMPEG_OPTIONS))
-                    except Exception:
-                        await ctx.send("Error, couldn't play the video.")
+                    except Exception as e:
+                        await ctx.send(e)
                         return
                 else:
                     await ctx.send("Already playing song")
@@ -113,6 +114,11 @@ async def leave(ctx):
         await ctx.send("Leaving the voice")
     else:
         await ctx.send("I am not in a voice channel")
+
+
+
+
+
 
 client.run(BOTTOKEN)
 
