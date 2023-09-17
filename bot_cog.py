@@ -6,6 +6,9 @@ from discord.utils import get
 
 class bot_cog(commands.Cog):
 
+
+    # SKIP DOESN'T WORK PROPERLY WITH MORE THAN 2 SONGS IN THE QUEUE NEED TO FIX
+    
     def __init__(self, client):
         self.music_queue = []
         self.is_playing = False
