@@ -31,23 +31,27 @@ class bot_cog(commands.Cog):
 
         @client.command()
         async def play(ctx, url):
-            
-            voice_channel = ctx.author.voice.channel
-            if voice_channel is None:
-                await ctx.send("You need to be in a voice channel to run this command")
-            elif self.is_paused:
-                self.vc.resume()
-            else:
-                song = self.search_yt(url)
-                if type(song) == type(True):
-                    await ctx.send("Couldn't download the song, incorrect format, try different keyword")
+            try:
+                voice_channel = ctx.author.voice.channel
+                if self.is_paused:
+                    self.vc.resume()
                 else:
-                    await ctx.send("song added to the queue")
-                    self.music_queue.append([song, voice_channel])
+                    song = self.search_yt(url)
+                    if type(song) == type(True):
+                        await ctx.send("Couldn't download the song, incorrect format, you have to use the URL")
+                    else:
+                        await ctx.send("song added to the queue")
+                        self.music_queue.append([song, voice_channel])
 
-                    if self.is_playing == False:
-                        await self.play_music(ctx)
+                        if self.is_playing == False:
+                            await self.play_music(ctx)
+            except AttributeError:
+                await ctx.send("You need to be in a voice channel in order to use this command!")
         
+        @client.command()
+        async def check_play(ctx):
+            await ctx.send(f"is playing = {self.is_playing}, is paused = {self.is_paused}")
+
         @client.command()
         async def pause(ctx):
             if self.vc != None:
@@ -71,7 +75,7 @@ class bot_cog(commands.Cog):
         @client.command()
         async def skip(ctx):
             if self.vc != None and self.vc:
-                self.vc.stop()
+                self.vc.stocheckp()
                 await self.play_music(ctx)
 
         @client.command()
