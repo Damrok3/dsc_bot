@@ -58,6 +58,7 @@ class bot_cog(commands.Cog):
                 if self.vc.is_playing():
                     self.vc.pause()
                     self.is_playing = False
+                    #HERE
                     self.is_paused = True
 
         @client.command()
@@ -75,7 +76,7 @@ class bot_cog(commands.Cog):
         @client.command()
         async def skip(ctx):
             if self.vc != None and self.vc:
-                self.vc.stocheckp()
+                self.vc.stop()
                 await self.play_music(ctx)
 
         @client.command()
@@ -108,6 +109,7 @@ class bot_cog(commands.Cog):
             self.vc.play(FFmpegPCMAudio(m_url, **self.FFMPEG_OPTIONS), after = lambda e: self.play_next())
         else:
             self.is_playing = False
+            #HERE
 
     async def play_music(self, ctx):
         if len(self.music_queue) > 0:
@@ -127,11 +129,6 @@ class bot_cog(commands.Cog):
             self.vc.play(FFmpegPCMAudio(m_url, **self.FFMPEG_OPTIONS), after = lambda e: self.play_next())
     
     
-
-
-        
-        
-
         # @client.command()
         # async def joke(ctx):
         #     jokeObj = await Jokes()
