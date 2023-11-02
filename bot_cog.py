@@ -83,6 +83,7 @@ class bot_cog(commands.Cog):
         async def clear(ctx):
             if self.vc != None and self.is_playing:
                 self.vc.stop()
+                self.is_playing = False
             self.music_queue = []
             await ctx.send("Music queue cleared")
 
@@ -91,6 +92,27 @@ class bot_cog(commands.Cog):
             self.is_playing = False
             self.is_paused = False
             await self.vc.disconnect()
+
+        @client.command()
+        async def joke(ctx):
+            jokeObj = await Jokes()
+            joke = await jokeObj.get_joke(  blacklist=[ "racist", 
+                                                        "sexist",
+                                                        "nsfw", 
+                                                        "explicit", 
+                                                        "religious"], 
+                                            category=[  "Misc",
+                                                        "Dark",
+                                                        "Pun",
+                                                        "Spooky",
+                                                        "Christmas"])
+                
+            
+            if joke["type"] == "single": # Print the joke
+                await ctx.send(joke["joke"])
+            else:
+                await ctx.send(joke["setup"])
+                await ctx.send(joke["delivery"])
                 
     def search_yt(self, item):
         with YoutubeDL(self.YDL_OPTIONS) as ydl:
@@ -101,7 +123,7 @@ class bot_cog(commands.Cog):
                 return False
         return URL
     
-    def play_next(self):
+    async def play_next(self):
         if len(self.music_queue) > 0:
             self.is_playing = True
             m_url = self.music_queue[0][0]
@@ -127,111 +149,5 @@ class bot_cog(commands.Cog):
 
             self.music_queue.pop(0)
             self.vc.play(FFmpegPCMAudio(m_url, **self.FFMPEG_OPTIONS), after = lambda e: self.play_next())
-    
-    
-        # @client.command()
-        # async def joke(ctx):
-        #     jokeObj = await Jokes()
-        #     joke = await jokeObj.get_joke(category=["dark"])
-        #     if joke["type"] == "single": # Print the joke
-        #         await ctx.send(joke["joke"])
-        #     else:
-        #         await ctx.send(joke["setup"])
-        #         await ctx.send(joke["delivery"])
-
-        # @client.command()
-        # async def join(ctx):
-        #     if(ctx.author.voice):                           # if user is in a voice channel, it will get this chanel id     
-        #         channel = ctx.message.author.voice.channel  # and join it
-        #         # voice = await channel.connect()
-        #         # source = FFmpegPCMAudio("maestro.mp3")
-        #         # player = voice.play(source)
-        #         await channel.connect()
-        #         print(channel)
-        #         print(ctx.voice_client.channel)
-        #     else:
-        #         await ctx.send("You need to be in a voice channel to run this command!")
-
-        # # @client.command()
-        # # async def play(ctx, url):
-        # #     if(ctx.author.voice):
-        # #         channel = ctx.message.author.voice.channel
-        # #         if(ctx.voice_client):
-        # #             if(ctx.voice_client.channel == channel):
-                        
-        # #                 voice = get(client.voice_clients, guild=ctx.guild)
-        # #                 try:
-        # #                     with YoutubeDL(YDL_OPTIONS) as ydl:
-        # #                         info = ydl.extract_info(url, download=False)
-        # #                         URL = info['url']
-        # #                 except Exception as e:
-        # #                     await ctx.send(e)
-        # #                     return
-                        
-        # #                 voice.play(FFmpegPCMAudio(queue.pop(0), **FFMPEG_OPTIONS), after = lambda e: self.play_next())
-                        
-        # #                 # if not voice.is_playing():
-        # #                 # else:
-        # #                 #     await ctx.send("Already playing song")
-        # #                 #     return
-        # #             else:
-        # #                 await ctx.send("You need to be in the same voice channel as me to run this command!")
-        # #                 return
-        # #         else:
-        # #             await ctx.send("First i need to connect to the voice channel to run this command!")
-        # #             return
-        # #     else:
-        # #         await ctx.send("You need to be in a voice channel to run this command!")
-        # #         return
-
-        # @client.command()
-        # async def stop(ctx):
-        #     if(ctx.author.voice):
-        #         channel = ctx.message.author.voice.channel
-        #         if(ctx.voice_client):
-        #             if(ctx.voice_client.channel == channel):
-        #                 voice = get(client.voice_clients, guild=ctx.guild)
-        #                 if voice.is_playing():
-        #                     voice.stop()                   
-        #                 else:
-        #                     await ctx.send("Not playing anything currently.")
-        #                     return
-        #             else:
-        #                 await ctx.send("You need to be in the same voice channel as me to run this command!")
-        #                 return
-        #         else:
-        #             await ctx.send("First i need to connect to the voice channel to run this command!")
-        #             return
-        #     else:
-        #         await ctx.send("You need to be in a voice channel to run this command!")
-        #         return
-            
-        # @client.command()
-        # async def resume(ctx):
-        #     if(ctx.author.voice):
-        #         channel = ctx.message.author.voice.channel
-        #         if(ctx.voice_client):
-        #             if(ctx.voice_client.channel == channel):
-        #                 voice = get(client.voice_clients, guild=ctx.guild)
-        #                 if not voice.is_playing():
-        #                     voice.resume()                   
-        #                 else:
-        #                     await ctx.send("Not playing anything currently.")
-        #                     return
-        #             else:
-        #                 await ctx.send("You need to be in the same voice channel as me to run this command!")
-        #                 return
-        #         else:
-        #             await ctx.send("First i need to connect to the voice channel to run this command!")
-        #             return
-        #     else:
-        #         await ctx.send("You need to be in a voice channel to run this command!")
-        #         return
-            
-        # @client.command()
-        # async def leave(ctx):
-        #     if(ctx.voice_client):                           # if the bot is in a voice channel
-        #         await ctx.guild.voice_client.disconnect()   # guild is basically a server, voice client is the voice chat that the bot is in
-        #         await ctx.send("Leaving the voice")
-        #     else:
-        #         await ctx.send("I am not in a voice channel")
+        else:
+            self.is_playing = False
