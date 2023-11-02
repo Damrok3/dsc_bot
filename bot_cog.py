@@ -41,6 +41,7 @@ class bot_cog(commands.Cog):
                         await ctx.send("Couldn't download the song, incorrect format, you have to use the URL")
                     else:
                         await ctx.send("song added to the queue")
+                        await ctx.send(f"current queue: {len(self.music_queue)} songs")
                         self.music_queue.append([song, voice_channel])
 
                         if self.is_playing == False:

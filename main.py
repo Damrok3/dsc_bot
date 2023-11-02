@@ -20,5 +20,4 @@ client.add_cog(bot_cog(client))
 
 client.run(BOTTOKEN)
 
-#MAKE A QUEUE CHECK TO SEE IF THERE AREN'T ANY REPEATED SONGS, AFTER ADDING A FEW
 
