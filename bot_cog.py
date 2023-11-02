@@ -5,9 +5,6 @@ from discord import FFmpegPCMAudio
 from discord.utils import get
 
 class bot_cog(commands.Cog):
-
-
-    # SKIP DOESN'T WORK PROPERLY WITH MORE THAN 2 SONGS IN THE QUEUE NEED TO FIX
     
     def __init__(self, client):
         self.music_queue = []
