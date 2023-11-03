@@ -1,5 +1,6 @@
 from yt_dlp import YoutubeDL
 from discord.ext import commands
+from discord import app_commands
 from jokeapi import Jokes
 from discord import FFmpegPCMAudio
 from discord.utils import get
@@ -15,16 +16,6 @@ class bot_cog(commands.Cog):
 
         self.YDL_OPTIONS = {'format': 'bestaudio', 'noplaylist':'True',}
         self.FFMPEG_OPTIONS = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5', 'options': '-vn'}
-        
-        @client.event
-        async def on_ready():   # when bot is ready to start receiving commands it executes this function    
-            print("Initialization complete")
-            print("-----------------------")
-        
-        @client.command()
-        async def hello(ctx):   # ctx allows to communicate with discord server, like send and get messages as well as
-                                # see other properties like about users and channels
-            await ctx.send("Hello, I am damrok's bot")
 
         @client.command()
         async def play(ctx, url):
