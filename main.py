@@ -12,7 +12,8 @@ class MyBot(commands.Bot):
         await self.load_extension(f"cogs.bot_cog")                                                                  
         await client.tree.sync()
     
-    async def on_ready(self):   # when bot is ready to start receiving commands it executes this function    
+    async def on_ready(self):   # when bot is ready to start receiving commands it executes this function  
+        await client.change_presence(status=discord.Status.online, activity=discord.CustomActivity("Chinchilling"))
         print("Initialization complete")
         print("-----------------------")                                                                                                                                                                                        
 

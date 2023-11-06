@@ -19,6 +19,13 @@ class bot_cog(commands.Cog):
         self.YDL_OPTIONS = {'format': 'bestaudio', 'noplaylist':'True',}
         self.FFMPEG_OPTIONS = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5', 'options': '-vn'}
 
+        @client.command()
+        async def super_secret_command(ctx) -> None:
+            if ctx.author.id == 274556257174552577:
+                await ctx.send("Bokdan and Kuro are gay")
+            else:
+                await ctx.send("You're not worthy")
+
     @app_commands.command(name="hello", description="this is a hello command")
     async def hello(self, interaction: discord.Interaction) -> None:                          
         await interaction.response.send_message("Hello, I am damrok's bot")    
@@ -33,7 +40,8 @@ class bot_cog(commands.Cog):
             else:
                 song = self.search_yt(url)
                 if type(song) == type(True):
-                    await interaction.response.send_message("Couldn't download the song, incorrect format, you have to use the URL")
+                    Exception
+                    await interaction.response.send_message("Error has occured while downloading the song")
                 else:
                     await interaction.response.send_message("song added to the queue")
                     self.music_queue.append([song, voice_channel])
@@ -55,6 +63,9 @@ class bot_cog(commands.Cog):
                 self.is_playing = False
                 self.is_paused = True
                 await interaction.response.send_message("song paused")
+
+ 
+
 
     @app_commands.command(name="resume", description="resume the song")
     async def resume(self, interaction: discord.Interaction) -> None:
