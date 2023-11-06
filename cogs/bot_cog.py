@@ -120,16 +120,19 @@ class bot_cog(commands.Cog):
                 return False
         return URL
     
-    async def play_next(self):
+    def play_next(self):
+        print("entered play_next")
         if len(self.music_queue) > 0:
             self.is_playing = True
             m_url = self.music_queue[0][0]
             self.music_queue.pop(0)
-            self.vc.play(FFmpegPCMAudio(m_url, **self.FFMPEG_OPTIONS), after = lambda e: self.play_next())
+            self.vc.play(discord.FFmpegPCMAudio(m_url, **self.FFMPEG_OPTIONS), after = lambda x = None: self.play_next())
         else:
+            print("play_next sets playing to false")
             self.is_playing = False
 
     async def play_music(self, interaction):
+        print("entered play_music")
         if len(self.music_queue) > 0:
             self.is_playing = True
             m_url = self.music_queue[0][0]
@@ -144,8 +147,10 @@ class bot_cog(commands.Cog):
                 await self.vc.move_to(self.music_queue[0][1])
 
             self.music_queue.pop(0)
-            self.vc.play(FFmpegPCMAudio(m_url, **self.FFMPEG_OPTIONS), after = lambda e: self.play_next())
+            self.vc.play(discord.FFmpegPCMAudio(m_url, **self.FFMPEG_OPTIONS), after = lambda x = None: self.play_next())
+
         else:
+            print("play_music sets playing to false")
             self.is_playing = False
 
 async def setup(client: commands.Bot) -> None:
