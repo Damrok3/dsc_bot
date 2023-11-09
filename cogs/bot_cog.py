@@ -2,9 +2,9 @@ from yt_dlp import YoutubeDL
 from discord.ext import commands
 from discord import app_commands
 from jokeapi import Jokes
-from discord import FFmpegPCMAudio
 from discord.utils import get
 import discord
+import asyncio
 
 class bot_cog(commands.Cog):
     
@@ -15,6 +15,7 @@ class bot_cog(commands.Cog):
         self.is_paused = False
         self.client = client
         self.vc = None
+        self.command_channel = None
 
         self.YDL_OPTIONS = {'format': 'bestaudio', 'noplaylist':'True',}
         self.FFMPEG_OPTIONS = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5', 'options': '-vn'}
@@ -35,6 +36,7 @@ class bot_cog(commands.Cog):
     async def play(self,interaction: discord.Interaction, url: str) -> None:
         try:
             voice_channel = interaction.user.voice.channel
+            self.command_channel = interaction.channel_id
             if self.is_paused:
                 self.vc.resume()
             else:
@@ -48,6 +50,7 @@ class bot_cog(commands.Cog):
 
                     if self.is_playing == False:
                         await self.play_music(interaction)
+                        
         except AttributeError:
             await interaction.response.send_message("You need to be in a voice channel in order to use this command!")
         
@@ -132,18 +135,18 @@ class bot_cog(commands.Cog):
         return URL
     
     def play_next(self):
-        print("entered play_next")
         if len(self.music_queue) > 0:
             self.is_playing = True
             m_url = self.music_queue[0][0]
             self.music_queue.pop(0)
             self.vc.play(discord.FFmpegPCMAudio(m_url, **self.FFMPEG_OPTIONS), after = lambda x = None: self.play_next())
         else:
-            print("play_next sets playing to false")
             self.is_playing = False
+            channel = self.client.get_channel(self.command_channel)
+            asyncio.run_coroutine_threadsafe(channel.send("Music finished playing"), self.client.loop)
+
 
     async def play_music(self, interaction):
-        print("entered play_music")
         if len(self.music_queue) > 0:
             self.is_playing = True
             m_url = self.music_queue[0][0]
@@ -158,11 +161,11 @@ class bot_cog(commands.Cog):
                 await self.vc.move_to(self.music_queue[0][1])
 
             self.music_queue.pop(0)
-            self.vc.play(discord.FFmpegPCMAudio(m_url, **self.FFMPEG_OPTIONS), after = lambda x = None: self.play_next())
-
+            self.vc.play(discord.FFmpegPCMAudio(m_url, **self.FFMPEG_OPTIONS), after = lambda x = None: self.play_next())  
         else:
-            print("play_music sets playing to false")
             self.is_playing = False
+            
 
 async def setup(client: commands.Bot) -> None:
     await client.add_cog(bot_cog(client))
+    
